@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import it.objectmethod.secretaryquiz.domain.User;
 import it.objectmethod.secretaryquiz.repository.UserRepository;
@@ -64,14 +65,12 @@ public class UserService {
 			message.setSubject("Email da ObjcetMethod");
 
 			String nameUser = "<h1>" + user.getName() + ",</h1>" + " ";
-			
-						String htmlCode = "<h1>la sua iscrizione e' andata buon fine!</h1><br>\r\n" + 
-								"        <h3>Objcet Method, le comunica che puo' sostenere il test al seguente link: </h3><br>\r\n" + 
-								"        <a href=\"http://localhost:4200/login\"> <h1 style=\"color: crimson; text-align: center;\">Inizia il\r\n" + 
-								"            Test!</h1></a><br><br><br>\r\n" + 
-								"        Cordiali Saluti, Object Method srl.\r\n" + 
-								"        <br><br><br><br><br><br>" + 
-					"        <br><br><br><br><br><br>";
+
+			String htmlCode = "<h1>la sua iscrizione e' andata buon fine!</h1><br>\r\n"
+					+ "        <h3>Objcet Method, le comunica che puo' sostenere il test al seguente link: </h3><br>\r\n"
+					+ "        <a href=\"http://localhost:4200/login\"> <h1 style=\"color: crimson; text-align: center;\">Inizia il\r\n"
+					+ "            Test!</h1></a><br><br><br>\r\n" + "        Cordiali Saluti, Object Method srl.\r\n"
+					+ "        <br><br><br><br><br><br>" + "        <br><br><br><br><br><br>";
 			String content = nameUser + htmlCode;
 			message.setContent(content, "text/html");
 			return message;
@@ -79,5 +78,14 @@ public class UserService {
 			System.out.println("Errore durante l'invio della richiesta" + e);
 		}
 		return null;
+	}
+
+	public User checkUser(String email, String password) {
+		User finalUser = null;
+		User user = userRepository.findByEmail(email);
+		if (user.getPassword().equals(password)) {
+			finalUser = user;
+		}
+		return finalUser;
 	}
 }
